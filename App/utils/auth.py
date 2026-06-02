@@ -42,8 +42,11 @@ redis_client = redis.StrictRedis(host=settings.redis_host, port=settings.redis_p
 async def authenticate_user(username: str, password: str):
     from App.models.usuario import Usuario
     try:
-        user = await Usuario.get(usuario=username,eliminado=False)
-        
+        # Try by username first, then fall back to email
+        user = await Usuario.get_or_none(usuario=username, eliminado=False)
+        if user is None:
+            user = await Usuario.get_or_none(correo=username, eliminado=False)
+
         if not user:
 
             raise HTTPException(
@@ -65,7 +68,7 @@ async def authenticate_user(username: str, password: str):
            # "employee_id": user.employee_id
         })
 
-        user_obj.__dict__.update({"endpoints": get_endpoints(user)})
+        user_obj.__dict__.update({"endpoints": await get_endpoints(user)})
         # remove password_hash from dictionary to generate bearer token
         del user_obj.__dict__['password_hash']
         del user_obj.__dict__['actualizacion']

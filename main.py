@@ -17,12 +17,18 @@ from App.setup.setup import(
     assign_endpoint_to_admin_role
 )
 from contextlib import asynccontextmanager
+import asyncio
 
 # routers
 from App.routers import token
 from App.routers import usuarios
 from App.routers import roles
 from App.routers import endpoints
+from App.routers import cosechas
+from App.routers import boveda
+from App.routers import inversiones
+from App.routers import oracle
+from App.routers import blockchain
 
 # utils
 from App.utils.logger import MyLogger
@@ -94,6 +100,11 @@ app.include_router(token.router)
 app.include_router(usuarios.router)
 app.include_router(roles.router)
 app.include_router(endpoints.router)
+app.include_router(cosechas.router)
+app.include_router(boveda.router)
+app.include_router(inversiones.router)
+app.include_router(oracle.router)
+app.include_router(blockchain.router)
 
 # Create the logger
 logger = MyLogger.__call__().get_logger()
@@ -112,24 +123,23 @@ app.add_middleware(
 
 @asynccontextmanager
 async def lifespan(app:FastAPI):
-    #T0d0 despues de aqui se inicializa 
+    from App.tasks.event_listener import poll_vault_events
     await init()
-    if settings.settings.skip_setup == False:
+    if settings.settings.create_configuration:
         await create_default_roles()
         await create_routes(app)
         await create_default_admin()
         await assign_role_to_admin_user()
         await assign_endpoint_to_admin_role()
 
+    asyncio.create_task(poll_vault_events(interval_seconds=15))
     yield
-    #T0d0 despues de aqui se finaliza 
     await close()
 
-if get_settings().create_configuration:
-    app.router.lifespan_context = lifespan
+app.router.lifespan_context = lifespan
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8001)
 
 

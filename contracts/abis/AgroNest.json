@@ -1,0 +1,1322 @@
+﻿{
+    "abi":  [
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "initialOwner",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "_usdc",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "constructor"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "sender",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "ERC721IncorrectOwner",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "operator",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "ERC721InsufficientApproval",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "approver",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "ERC721InvalidApprover",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "operator",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "ERC721InvalidOperator",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "ERC721InvalidOwner",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "receiver",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "ERC721InvalidReceiver",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "sender",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "ERC721InvalidSender",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "ERC721NonexistentToken",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "OwnableInvalidOwner",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "account",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "OwnableUnauthorizedAccount",
+                    "type":  "error"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "ReentrancyGuardReentrantCall",
+                    "type":  "error"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "approved",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "Approval",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "operator",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "bool",
+                                       "name":  "approved",
+                                       "type":  "bool"
+                                   }
+                               ],
+                    "name":  "ApprovalForAll",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "reserveAvailable",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "CropDefaulted",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "totalPayout",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "yieldAmount",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "CropLiquidated",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "farmer",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "string",
+                                       "name":  "farmId",
+                                       "type":  "string"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "capitalRequired",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "harvestDate",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "CropMinted",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "totalRaised",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "reserveAmount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "disbursedToFarmer",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "FundingComplete",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "investor",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "usdcAmount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "bCropMinted",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "InvestmentReceived",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "previousOwner",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "newOwner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "OwnershipTransferred",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "investor",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "usdcAmount",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "ReturnsClaimed",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "enum AgroNest.CropState",
+                                       "name":  "newState",
+                                       "type":  "uint8"
+                                   }
+                               ],
+                    "name":  "StateAdvanced",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "from",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "address",
+                                       "name":  "to",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "Transfer",
+                    "type":  "event"
+                },
+                {
+                    "anonymous":  false,
+                    "inputs":  [
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  true,
+                                       "internalType":  "uint256",
+                                       "name":  "cropTokenId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "fundingGoal",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "indexed":  false,
+                                       "internalType":  "uint256",
+                                       "name":  "fundingDeadline",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "VaultCreated",
+                    "type":  "event"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "bool",
+                                       "name":  "success",
+                                       "type":  "bool"
+                                   }
+                               ],
+                    "name":  "advanceState",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "to",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "approve",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "investor",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "bCropBalanceOf",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "bCropBalances",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "bCropSupply",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "balanceOf",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "investor",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "claimReturns",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "cropTokenId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "fundingGoal",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "fundingDeadline",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "reservePercent",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "yieldPercent",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "farmer",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "createVault",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "vaultId",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "cropData",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "string",
+                                        "name":  "farmId",
+                                        "type":  "string"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "hectares",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "string",
+                                        "name":  "grainType",
+                                        "type":  "string"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "estimatedYieldKg",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "capitalRequired",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "harvestDate",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "farmer",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "usdcAmount",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "investor",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "deposit",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "getApproved",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "getCropData",
+                    "outputs":  [
+                                    {
+                                        "components":  [
+                                                           {
+                                                               "internalType":  "string",
+                                                               "name":  "farmId",
+                                                               "type":  "string"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "hectares",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "string",
+                                                               "name":  "grainType",
+                                                               "type":  "string"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "estimatedYieldKg",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "capitalRequired",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "harvestDate",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "address",
+                                                               "name":  "farmer",
+                                                               "type":  "address"
+                                                           }
+                                                       ],
+                                        "internalType":  "struct AgroNest.CropMetadata",
+                                        "name":  "",
+                                        "type":  "tuple"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "index",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "getInvestorAt",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "getInvestorsCount",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "getOracleState",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "enum AgroNest.CropState",
+                                        "name":  "",
+                                        "type":  "uint8"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "vaultId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "getVaultState",
+                    "outputs":  [
+                                    {
+                                        "components":  [
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "cropTokenId",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "fundingGoal",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "fundingDeadline",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "reservePercent",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "yieldPercent",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "uint256",
+                                                               "name":  "totalRaised",
+                                                               "type":  "uint256"
+                                                           },
+                                                           {
+                                                               "internalType":  "enum AgroNest.VaultStatus",
+                                                               "name":  "status",
+                                                               "type":  "uint8"
+                                                           },
+                                                           {
+                                                               "internalType":  "address",
+                                                               "name":  "farmerAddress",
+                                                               "type":  "address"
+                                                           },
+                                                           {
+                                                               "internalType":  "enum AgroNest.CropState",
+                                                               "name":  "oracleState",
+                                                               "type":  "uint8"
+                                                           }
+                                                       ],
+                                        "internalType":  "struct AgroNest.VaultInfo",
+                                        "name":  "",
+                                        "type":  "tuple"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "owner",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "operator",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "isApprovedForAll",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "bool",
+                                        "name":  "",
+                                        "type":  "bool"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "to",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "string",
+                                       "name":  "farmId",
+                                       "type":  "string"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "hectares",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "string",
+                                       "name":  "grainType",
+                                       "type":  "string"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "estimatedYieldKg",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "capitalRequired",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "harvestDate",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "mintCrop",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "tokenId",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "name",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "string",
+                                        "name":  "",
+                                        "type":  "string"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "owner",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "ownerOf",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "renounceOwnership",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "from",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "to",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "safeTransferFrom",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "from",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "to",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   },
+                                   {
+                                       "internalType":  "bytes",
+                                       "name":  "data",
+                                       "type":  "bytes"
+                                   }
+                               ],
+                    "name":  "safeTransferFrom",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "operator",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "bool",
+                                       "name":  "approved",
+                                       "type":  "bool"
+                                   }
+                               ],
+                    "name":  "setApprovalForAll",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "bytes4",
+                                       "name":  "interfaceId",
+                                       "type":  "bytes4"
+                                   }
+                               ],
+                    "name":  "supportsInterface",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "bool",
+                                        "name":  "",
+                                        "type":  "bool"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "symbol",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "string",
+                                        "name":  "",
+                                        "type":  "string"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "tokenURI",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "string",
+                                        "name":  "",
+                                        "type":  "string"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "totalCrops",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "",
+                                        "type":  "uint256"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "from",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "to",
+                                       "type":  "address"
+                                   },
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "tokenId",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "transferFrom",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "address",
+                                       "name":  "newOwner",
+                                       "type":  "address"
+                                   }
+                               ],
+                    "name":  "transferOwnership",
+                    "outputs":  [
+
+                                ],
+                    "stateMutability":  "nonpayable",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+
+                               ],
+                    "name":  "usdc",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "contract IERC20",
+                                        "name":  "",
+                                        "type":  "address"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                },
+                {
+                    "inputs":  [
+                                   {
+                                       "internalType":  "uint256",
+                                       "name":  "",
+                                       "type":  "uint256"
+                                   }
+                               ],
+                    "name":  "vaults",
+                    "outputs":  [
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "cropTokenId",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "fundingGoal",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "fundingDeadline",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "reservePercent",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "yieldPercent",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "uint256",
+                                        "name":  "totalRaised",
+                                        "type":  "uint256"
+                                    },
+                                    {
+                                        "internalType":  "enum AgroNest.VaultStatus",
+                                        "name":  "status",
+                                        "type":  "uint8"
+                                    },
+                                    {
+                                        "internalType":  "address",
+                                        "name":  "farmerAddress",
+                                        "type":  "address"
+                                    },
+                                    {
+                                        "internalType":  "enum AgroNest.CropState",
+                                        "name":  "oracleState",
+                                        "type":  "uint8"
+                                    }
+                                ],
+                    "stateMutability":  "view",
+                    "type":  "function"
+                }
+            ],
+    "contractName":  "AgroNest"
+}

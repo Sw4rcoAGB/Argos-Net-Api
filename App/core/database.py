@@ -28,6 +28,9 @@ async def init():
                      "App.models.usuario",
                      "App.models.rol",
                      "App.models.endpoint",
+                     "App.models.cosecha",
+                     "App.models.boveda",
+                     "App.models.inversion",
                 ]
         }
     )

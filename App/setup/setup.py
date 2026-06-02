@@ -89,6 +89,18 @@ async def create_default_roles():
         await role_obj.save()
         logger.debug("Rol de usuario creado... ok")
 
+    exists = await Rol.filter(nombre="Agricultor").exists()
+    if not exists:
+        role_obj = Rol(nombre="Agricultor", descripcion="Agricultor registrador de cosechas")
+        await role_obj.save()
+        logger.debug("Rol de agricultor creado... ok")
+
+    exists = await Rol.filter(nombre="Inversor").exists()
+    if not exists:
+        role_obj = Rol(nombre="Inversor", descripcion="Inversor en bóvedas de cosechas")
+        await role_obj.save()
+        logger.debug("Rol de inversor creado... ok")
+
 
 async def create_default_admin():
     """

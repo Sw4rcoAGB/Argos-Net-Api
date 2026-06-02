@@ -58,7 +58,14 @@ class Settings(BaseSettings):
     # MAGIC LINK EXPIRATION IN MINUTES
     ml_exp_min : int
     
-    create_configuration: str
+    create_configuration: bool
+    # BLOCKCHAIN CONFIGURATION
+    rpc_url: str 
+    chain_id: int 
+    api_private_key: str 
+    contract_abi_dir: str 
+    agronest_contract_address: str
+    usdc_contract_address: str 
     # This generates the mapping to Settings object from .env file
     model_config = SettingsConfigDict(env_file=".env")
     # Dictionary containing the password reset environment

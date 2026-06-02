@@ -2,6 +2,22 @@
 *.xls
 *.xlsx
 
+# ─── Hardhat / Contratos ───────────────────────────────────────────────────────
+# Todo lo generado por Hardhat — se regenera con: npm install && npx hardhat compile
+contracts/node_modules/
+contracts/artifacts/
+contracts/cache/
+contracts/typechain-types/
+# ABIs copiados manualmente a contracts/abis/ (esos SÍ se commitean, son solo 5 archivos)
+# Addresses de dev local (efímeras, se regeneran con start-dev.ps1)
+contracts/deployed_addresses.json
+# Addresses de Sepolia (contienen la red desplegada — commitear si quieres compartirlas)
+# Si las metes en .env no necesitas este archivo en el repo
+# contracts/deployed_addresses.sepolia.json
+# Archivos de tooling pnpm (no necesarios en el repo)
+contracts/pnpm-lock.yaml
+contracts/pnpm-workspace.yaml
+
 # ignore log folder
 log/
 

@@ -282,7 +282,7 @@ async def renew_access_token(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Renovacion de token invalida")
 
     # generate new access token
-    access_token = await create_access_token(request, payload, payload.get("empresa_key"))
+    access_token = await create_access_token(request, payload)
 
     redis_client.hset("valid_tokens", payload.get("id"), access_token)
 

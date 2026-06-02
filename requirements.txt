@@ -27,3 +27,4 @@ wsproto==1.2.0
 watchfiles==1.1.0
 pytest==8.4.2
 itsdangerous==2.2.0
+web3==7.14.1
