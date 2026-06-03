@@ -65,7 +65,9 @@ class Settings(BaseSettings):
     api_private_key: str 
     contract_abi_dir: str 
     agronest_contract_address: str
-    usdc_contract_address: str 
+    usdc_contract_address: str
+    # GOOGLE GEMINI AI CONFIGURATION
+    gemini_api_key: str 
     # This generates the mapping to Settings object from .env file
     model_config = SettingsConfigDict(env_file=".env")
     # Dictionary containing the password reset environment

@@ -29,6 +29,7 @@ from App.routers import boveda
 from App.routers import inversiones
 from App.routers import oracle
 from App.routers import blockchain
+from App.routers import ai
 
 # utils
 from App.utils.logger import MyLogger
@@ -105,6 +106,7 @@ app.include_router(boveda.router)
 app.include_router(inversiones.router)
 app.include_router(oracle.router)
 app.include_router(blockchain.router)
+app.include_router(ai.router)
 
 # Create the logger
 logger = MyLogger.__call__().get_logger()

@@ -88,6 +88,8 @@ def _determinar_nuevo_estado(receipt, w3, vault_address: str, estado_actual: str
     state_progression = {
         "PENDIENTE": "MINTED",
         "MINTED":    "ACTIVE",
+        "OPEN":      "ACTIVE",   # boveda recién abierta, primer avance del oracle
+        "FUNDED":    "ACTIVE",   # vault financiado, oracle sigue avanzando
         "ACTIVE":    "MATURE",
         "MATURE":    "LIQUIDATED" if exito else "DEFAULTED",
     }

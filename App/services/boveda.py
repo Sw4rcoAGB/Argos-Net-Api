@@ -61,10 +61,12 @@ async def abrir_boveda(
     vault_artifact  = w3.load_artifact("CropVault.json")
 
     # ── 2. Desplegar bCROPToken ──────────────────────────────────────────────
+    # Constructor: (initialOwner, _vault) — vault se actualiza con setVault tras deployar CropVault
     bcrop_address = await w3.deploy_contract(
         bcrop_artifact["abi"],
         bcrop_artifact["bytecode"],
         w3.api_account.address,  # initialOwner
+        w3.api_account.address,  # _vault placeholder
     )
     logger.info(f"{logger_message} bCROPToken desplegado en {bcrop_address}")
 
