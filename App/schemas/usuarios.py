@@ -14,6 +14,7 @@ class UsuarioBase(BaseModel):
 
 class CrearUsuarioSchema(UsuarioBase):
     password_hash: Optional[str] = None
+    rol: str = "inversor"
 
 class ActualizarUsuario(BaseModel):
     usuario: Optional[str] = None
@@ -29,6 +30,7 @@ class ActualizarUsuario(BaseModel):
 class RespuestaUsuario(UsuarioBase):
     eliminado: bool
     id: int
+    rol: str = "inversor"
 
     model_config = {
         "json_schema_extra": {

@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Literal
+from typing import Literal, Optional, Dict, Any
 
 
 class ChatMessage(BaseModel):
@@ -10,6 +10,7 @@ class ChatMessage(BaseModel):
 class ChatRequest(BaseModel):
     mensaje: str
     historial: list[ChatMessage] = []
+    contexto_cosecha: Optional[Dict[str, Any]] = None
 
 
 class ChatResponse(BaseModel):

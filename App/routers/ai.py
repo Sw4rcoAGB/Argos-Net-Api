@@ -43,12 +43,26 @@ async def chat(req: ChatRequest, _=Depends(get_current_user)):
             for m in req.historial
         ]
 
+        if req.contexto_cosecha:
+            ctx = req.contexto_cosecha
+            system = SYSTEM_PROMPT + f"""
+
+CONTEXTO ACTUAL DE LA COSECHA:
+- Tipo: {ctx.get('tipo_grano', 'N/A')}
+- Hectáreas: {ctx.get('hectareas', 'N/A')}
+- Capital requerido: ${ctx.get('capital_requerido', 'N/A')} USDC
+- Estado actual: {ctx.get('estado', 'N/A')}
+- Rendimiento estimado: {ctx.get('rendimiento_kg', 'N/A')} kg
+El usuario está viendo esta cosecha ahora mismo. Responde con análisis específico de estos datos."""
+        else:
+            system = SYSTEM_PROMPT
+
         last_error: Exception | None = None
         for model_name in _MODELS:
             try:
                 model = genai.GenerativeModel(
                     model_name=model_name,
-                    system_instruction=SYSTEM_PROMPT,
+                    system_instruction=system,
                 )
                 chat_session = model.start_chat(history=history)
                 response = chat_session.send_message(req.mensaje)

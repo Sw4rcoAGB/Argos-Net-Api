@@ -65,6 +65,7 @@ async def crear_usuario(
         apellidos = user_data.apellidos,
         correo = user_data.correo,
         password_hash = Usuario.hash_password(user_data.password_hash),
+        rol = user_data.rol,
     )
 
     try:
@@ -109,6 +110,7 @@ async def mi_info(
     response_json["correo"] = _user.correo
     response_json["creacion"] = creacion
     response_json["eliminado"] = _user.eliminado
+    response_json["rol"] = _user.rol
 
     logger.info(f" [SUCCESS] Usuario obtenido.")
     return JSONResponse(

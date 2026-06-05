@@ -26,6 +26,7 @@ class Usuario(models.Model):
         forward_key="rol_id",
         backward_key="usuario_id"
     )
+    rol = fields.CharField(max_length=20, default="inversor")
     eliminado = fields.BooleanField(default=False)
     creacion = fields.DatetimeField(auto_now_add=True, null=True)
     actualizacion = fields.DatetimeField(auto_now=True, null=True)
