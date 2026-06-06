@@ -13,6 +13,9 @@ from tortoise.exceptions import DoesNotExist
 
 # utils
 from App.utils.auth_check import  endpoint_authorization
+from App.utils.logger import MyLogger
+
+logger = MyLogger.__call__().get_logger()
 
 # my models
 from App.models.usuario import Usuario
@@ -166,5 +169,8 @@ async def authorization(token: str = Depends(oauth2_scheme)):
         )
 
 async def tokenOut(token: str):
-    redis_client.set(token, "revoked", ex=settings.redis_exp)
+    try:
+        redis_client.set(token, "revoked", ex=settings.redis_exp)
+    except redis.exceptions.ConnectionError:
+        logger.warning("Redis no disponible — token no registrado como revocado (expirará por TTL JWT)")
     return {"detail": "Token revoked"}
