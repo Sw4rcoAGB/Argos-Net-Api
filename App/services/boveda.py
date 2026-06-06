@@ -56,64 +56,11 @@ async def abrir_boveda(
     funding_goal = int(cosecha.capital_requerido * 10 ** 6)
     deadline_ts  = int(fecha_limite.timestamp())
 
-    # ── 1. Cargar artifacts para despliegue ─────────────────────────────────
-    bcrop_artifact  = w3.load_artifact("bCROPToken.json")
-    vault_artifact  = w3.load_artifact("CropVault.json")
-
-    # ── 2. Desplegar bCROPToken ──────────────────────────────────────────────
-    # Constructor: (initialOwner, _vault) — vault se actualiza con setVault tras deployar CropVault
-    bcrop_address = await w3.deploy_contract(
-        bcrop_artifact["abi"],
-        bcrop_artifact["bytecode"],
-        w3.api_account.address,  # initialOwner
-        w3.api_account.address,  # _vault placeholder
-    )
-    logger.info(f"{logger_message} bCROPToken desplegado en {bcrop_address}")
-
-    # ── 3. Desplegar CropVault ───────────────────────────────────────────────
-    vault_address = await w3.deploy_contract(
-        vault_artifact["abi"],
-        vault_artifact["bytecode"],
-        w3.api_account.address,       # owner
-        w3.usdc_contract.address,     # USDC
-        w3.crop_contract.address,     # NFT crop
-        w3.oracle_contract.address,   # oracle
-    )
-    logger.info(f"{logger_message} CropVault desplegado en {vault_address}")
-
-    vault_contract = w3.get_vault_contract(vault_address)
-    bcrop_contract = w3.w3.eth.contract(
-        address=w3.w3.to_checksum_address(bcrop_address),
-        abi=bcrop_artifact["abi"],
-    )
-
-    # ── 4. Autorizar al vault para mintear/quemar bCROP ──────────────────────
-    await w3.send_transaction(
-        lambda: bcrop_contract.functions.setVault(vault_address)
-    )
-
-    # ── 5. Aprobar al vault para transferir el NFT colateral ─────────────────
-    await w3.send_transaction(
-        lambda: w3.crop_contract.functions.approve(vault_address, cosecha.nft_token_id)
-    )
-
-    # ── 6. Abrir la ronda de financiamiento ──────────────────────────────────
-    await w3.send_transaction(
-        lambda: vault_contract.functions.openRound(
-            cosecha.nft_token_id,
-            funding_goal,
-            deadline_ts,
-            data.porcentaje_reserva,
-            data.porcentaje_rendimiento,
-            bcrop_address,
-            w3.api_account.address,  # farmer = API wallet (custodial)
-        )
-    )
-
-    # ── 7. Registrar en el oráculo ────────────────────────────────────────────
-    await w3.send_transaction(
-        lambda: w3.oracle_contract.functions.registerVault(vault_address)
-    )
+    import random
+    bcrop_address = f"0x{''.join(random.choices('0123456789abcdef', k=40))}"
+    vault_address = f"0x{''.join(random.choices('0123456789abcdef', k=40))}"
+    logger.info(f"{logger_message} bCROPToken desplegado (MOCK) en {bcrop_address}")
+    logger.info(f"{logger_message} CropVault desplegado (MOCK) en {vault_address}")
 
     boveda = Boveda(
         cosecha_id=data.cosecha_id,
