@@ -22,6 +22,7 @@ tortoise_conn_string = "postgres://" + \
 async def init():
     await Tortoise.init(
         db_url=tortoise_conn_string,
+        _enable_global_fallback=True,
         modules={
             'models':
                 [
