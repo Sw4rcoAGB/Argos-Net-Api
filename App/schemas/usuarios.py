@@ -8,13 +8,15 @@ class UsuarioBase(BaseModel):
     nombres: str
     apellidos: Optional[str] = None
     correo: str
-    
+    wallet_address: Optional[str] = None
+
     class Config:
         from_attributes = True
 
 class CrearUsuarioSchema(UsuarioBase):
     password_hash: Optional[str] = None
     rol: str = "inversor"
+    wallet_address: Optional[str] = None
 
 class ActualizarUsuario(BaseModel):
     usuario: Optional[str] = None

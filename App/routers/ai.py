@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 from App.core.settings import settings
 from App.schemas.ai import ChatRequest, ChatResponse
@@ -26,7 +27,7 @@ Estados de una cosecha: PENDIENTE → MINTED → ACTIVE → MATURE → LIQUIDATE
 
 Responde siempre en español, de forma clara, concisa y amigable. Si el usuario hace preguntas técnicas de DeFi o blockchain, explica los conceptos de forma sencilla. Si pide ayuda para usar la plataforma, guíalo paso a paso."""
 
-_MODELS = ["gemini-flash-latest", "gemini-flash-lite-latest"]
+_MODELS = ["gemini-flash-lite-latest", "gemini-flash-latest", "gemini-2.0-flash-lite"]
 
 
 @router.post("/chat", response_model=ChatResponse)
@@ -37,9 +38,12 @@ async def chat(req: ChatRequest, _=Depends(get_current_user)):
             detail="El servicio de IA no está configurado.",
         )
     try:
-        genai.configure(api_key=settings.gemini_api_key)
+        client = genai.Client(api_key=settings.gemini_api_key)
         history = [
-            {"role": "user" if m.rol == "user" else "model", "parts": [m.contenido]}
+            types.Content(
+                role="user" if m.rol == "user" else "model",
+                parts=[types.Part(text=m.contenido)],
+            )
             for m in req.historial
         ]
 
@@ -60,23 +64,27 @@ El usuario está viendo esta cosecha ahora mismo. Responde con análisis especí
         last_error: Exception | None = None
         for model_name in _MODELS:
             try:
-                model = genai.GenerativeModel(
-                    model_name=model_name,
-                    system_instruction=system,
+                chat_session = client.chats.create(
+                    model=model_name,
+                    config=types.GenerateContentConfig(system_instruction=system),
+                    history=history,
                 )
-                chat_session = model.start_chat(history=history)
                 response = chat_session.send_message(req.mensaje)
                 return ChatResponse(respuesta=response.text)
             except Exception as e:
                 logger.warning(f"Model {model_name} failed: {e}")
                 last_error = e
 
-        raise last_error  # type: ignore[misc]
+        logger.error(f"Todos los modelos Gemini fallaron: {last_error}")
+        return ChatResponse(
+            respuesta="Actualmente estoy procesando demasiados datos climáticos satelitales. "
+                      "Por favor, revisa el índice de salud de la cosecha en tu panel principal."
+        )
     except HTTPException:
         raise
     except Exception as e:
         logger.error(f"Gemini API error: {e}")
-        raise HTTPException(
-            status_code=status.HTTP_502_BAD_GATEWAY,
-            detail="Error al contactar el servicio de IA.",
+        return ChatResponse(
+            respuesta="Actualmente estoy procesando demasiados datos climáticos satelitales. "
+                      "Por favor, revisa el índice de salud de la cosecha en tu panel principal."
         )

@@ -30,12 +30,12 @@ class Settings(BaseSettings):
     jwt_secret_renew: str
     jwt_token_expiration: int
     jwt_renew_expiration: int
-    algorithm: str = "HS256"
+    algorithm: str
     # LOG CONFIGURATION
     log_route: str
     log_level: str
     log_file_size: int
-    log_backup_count: int = 30
+    log_backup_count: int
     log_nomenclature: str
     # DATABASE CONFIGURATION
     db_server: str
@@ -67,7 +67,13 @@ class Settings(BaseSettings):
     agronest_contract_address: str
     usdc_contract_address: str
     # GOOGLE GEMINI AI CONFIGURATION
-    gemini_api_key: str 
+    gemini_api_key: str
+    # ETHERFUSE CONFIGURATION
+    etherfuse_api_key: str
+    etherfuse_base_url: str
+    # RARE PROTOCOL CONFIGURATION
+    rare_contract_address: str
+    rare_network: str
     # This generates the mapping to Settings object from .env file
     model_config = SettingsConfigDict(env_file=".env")
     # Dictionary containing the password reset environment

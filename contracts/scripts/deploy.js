@@ -34,10 +34,12 @@ async function main() {
   const usdcAddress = await usdc.getAddress();
   console.log("  ✔ MockUSDC         :", usdcAddress);
 
-  // ── 2. MockOracle ─────────────────────────────────────────────────────────
+  // ── 2. MockOracle (unificado con Chainlink Functions) ─────────────────────
+  // _subId = 0 → modo mock manual (Chainlink deshabilitado hasta configurar subscriptionId)
+  // Para activar Chainlink después del deploy: llama oracle.updateSubscriptionId(tuSubId)
   console.log("Desplegando MockOracle...");
   const MockOracle = await ethers.getContractFactory("MockOracle");
-  const oracle = await MockOracle.deploy(deployer.address);
+  const oracle = await MockOracle.deploy(deployer.address, 0);
   await oracle.waitForDeployment();
   const oracleAddress = await oracle.getAddress();
   console.log("  ✔ MockOracle       :", oracleAddress);

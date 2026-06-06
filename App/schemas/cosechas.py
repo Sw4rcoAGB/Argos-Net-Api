@@ -10,6 +10,8 @@ class CrearCosechaSchema(BaseModel):
     rendimiento_kg:    int
     capital_requerido: Decimal
     fecha_cosecha:     datetime
+    latitud:           Optional[float] = None
+    longitud:          Optional[float] = None
 
     class Config:
         from_attributes = True
@@ -27,6 +29,8 @@ class RespuestaCosechaSchema(BaseModel):
     nft_token_id:      Optional[int]
     tx_hash_mint:      Optional[str]
     estado:            str
+    latitud:           Optional[float] = None
+    longitud:          Optional[float] = None
     creacion:          Optional[datetime]
 
     class Config:

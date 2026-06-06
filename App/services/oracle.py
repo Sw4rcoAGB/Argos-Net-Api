@@ -96,6 +96,77 @@ def _determinar_nuevo_estado(receipt, w3, vault_address: str, estado_actual: str
     return state_progression.get(estado_actual, estado_actual)
 
 
+async def solicitar_resolucion_chainlink(
+    cosecha_id: int,
+    lat: str,
+    lon: str,
+    logger_message: str,
+) -> dict:
+    """
+    Llama ChainlinkOracle.requestWeatherData() para resolver una bóveda en estado MATURE
+    consultando datos reales de precipitación vía Chainlink Functions (Open-Meteo).
+
+    Requiere:
+      - Oracle desplegado como ChainlinkOracle.sol (no MockOracle)
+      - ABI en contracts/abis/ChainlinkOracle.json
+      - Suscripción Chainlink Functions activa con LINK suficiente
+      - ORACLE_CONTRACT_ADDRESS en .env apuntando al ChainlinkOracle desplegado
+
+    El callback fulfillRequest() llega en ~30s y resuelve LIQUIDATED o DEFAULTED.
+    El event listener existente (poll 15s) detecta el cambio y actualiza PostgreSQL.
+    """
+    w3 = get_web3_client()
+
+    boveda = await Boveda.get_or_none(cosecha_id=cosecha_id)
+    if not boveda or not boveda.vault_address:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Bóveda no encontrada o sin vault_address")
+
+    if boveda.estado != "MATURE":
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            detail=f"La bóveda debe estar en estado MATURE para usar Chainlink. Estado actual: {boveda.estado}",
+        )
+
+    if not w3.oracle_contract:
+        raise HTTPException(
+            status.HTTP_503_SERVICE_UNAVAILABLE,
+            detail="Contrato Oracle no disponible — verifica ORACLE_CONTRACT_ADDRESS en .env",
+        )
+
+    # Verificar que el contrato expone requestWeatherData (ChainlinkOracle, no MockOracle)
+    chainlink_fn = getattr(w3.oracle_contract.functions, "requestWeatherData", None)
+    if chainlink_fn is None:
+        raise HTTPException(
+            status.HTTP_501_NOT_IMPLEMENTED,
+            detail=(
+                "El contrato Oracle actual es MockOracle y no soporta Chainlink Functions. "
+                "Despliega ChainlinkOracle.sol en Remix y actualiza ORACLE_CONTRACT_ADDRESS en .env."
+            ),
+        )
+
+    tx_hash = await w3.send_transaction(
+        lambda: w3.oracle_contract.functions.requestWeatherData(boveda.vault_address, lat, lon)
+    )
+    receipt = await w3.wait_for_receipt(tx_hash)
+    if receipt.get("status") != 1:
+        raise HTTPException(status.HTTP_502_BAD_GATEWAY, detail="La transacción Chainlink falló en la blockchain")
+
+    logger.info(
+        "%s [CHAINLINK] requestWeatherData enviado para cosecha %d vault=%s lat=%s lon=%s tx=%s",
+        logger_message, cosecha_id, boveda.vault_address, lat, lon, tx_hash,
+    )
+    return {
+        "cosecha_id":    cosecha_id,
+        "vault_address": boveda.vault_address,
+        "estado_actual": boveda.estado,
+        "tx_hash":       tx_hash,
+        "lat":           lat,
+        "lon":           lon,
+        "status":        "pending_chainlink",
+        "mensaje":       "Solicitud enviada a Chainlink. El oracle resolverá en ~30 segundos según datos reales de precipitación.",
+    }
+
+
 async def obtener_estado_oracle(
     vault_address: str,
     logger_message: str,

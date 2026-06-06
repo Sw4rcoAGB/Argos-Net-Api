@@ -19,6 +19,12 @@ class AvanzarEstadoSchema(BaseModel):
     exito: bool = True
 
 
+class ChainlinkResolverSchema(BaseModel):
+    cosecha_id: int
+    lat: str = "19.4326"
+    lon: str = "-99.1332"
+
+
 @router.post("/avanzar")
 async def avanzar_estado(
     data: AvanzarEstadoSchema,
@@ -37,6 +43,34 @@ async def avanzar_estado(
         raise http_exc
     except Exception as e:
         logger.error(f"{logger_message} Error al avanzar estado del oráculo: {e}")
+        raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
+
+
+@router.post("/avanzar-chainlink")
+async def avanzar_chainlink(
+    data: ChainlinkResolverSchema,
+    request: Request,
+    user=Depends(get_current_user),
+):
+    """
+    Admin-only: solicita resolución automática de una bóveda MATURE vía Chainlink Functions.
+
+    Envía una transacción que hace que los nodos Chainlink consulten Open-Meteo (sin API key)
+    para determinar si hubo sequía en las coordenadas indicadas. El callback on-chain llega
+    en ~30 segundos y dispara liquidate() o triggerDefault() según precipitación real.
+
+    Requiere ChainlinkOracle.sol desplegado (ver contracts/contracts/ChainlinkOracle.sol).
+    lat/lon: coordenadas de la zona agrícola (default: CDMX para demo).
+    """
+    logger_message = await check_permissions(user, request)
+    try:
+        return await OracleService.solicitar_resolucion_chainlink(
+            data.cosecha_id, data.lat, data.lon, logger_message
+        )
+    except HTTPException as http_exc:
+        raise http_exc
+    except Exception as e:
+        logger.error("%s Error al solicitar resolución Chainlink: %s", logger_message, e)
         raise HTTPException(status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
 

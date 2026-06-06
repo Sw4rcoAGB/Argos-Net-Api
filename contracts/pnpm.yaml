@@ -1,3 +1,4 @@
 onlyBuiltDependencies:
   - keccak
   - secp256k1
+blockExoticSubdeps: false

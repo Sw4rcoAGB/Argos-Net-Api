@@ -157,7 +157,10 @@ async def generate_token(
     access_token = await create_access_token(request, payload)
     refresh_token = await create_refresh_token(payload)
 
-    redis_client.hset("valid_tokens", user_obj.id, access_token)
+    try:
+        redis_client.hset("valid_tokens", user_obj.id, access_token)
+    except redis.exceptions.ConnectionError:
+        logger.warning("Redis no disponible — token no registrado en sesiones activas")
 
     return {
         'access_token': access_token,
@@ -284,7 +287,10 @@ async def renew_access_token(
     # generate new access token
     access_token = await create_access_token(request, payload)
 
-    redis_client.hset("valid_tokens", payload.get("id"), access_token)
+    try:
+        redis_client.hset("valid_tokens", payload.get("id"), access_token)
+    except redis.exceptions.ConnectionError:
+        logger.warning("Redis no disponible — token renovado sin registrar en sesiones activas")
 
     return {
         'access_token': access_token,

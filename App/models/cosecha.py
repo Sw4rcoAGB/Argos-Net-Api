@@ -14,6 +14,8 @@ class Cosecha(models.Model):
     tx_hash_mint      = fields.CharField(max_length=66, null=True)
     # PENDIENTE → MINTED → ACTIVE → MATURE → LIQUIDATED / DEFAULTED
     estado            = fields.CharField(max_length=20, default="PENDIENTE")
+    latitud           = fields.FloatField(null=True, default=None)
+    longitud          = fields.FloatField(null=True, default=None)
     eliminado         = fields.BooleanField(default=False)
     creacion          = fields.DatetimeField(auto_now_add=True, null=True)
     actualizacion     = fields.DatetimeField(auto_now=True, null=True)

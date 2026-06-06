@@ -111,42 +111,33 @@ async def get_endpoints(user: Usuario):
 # function to get user information based on oauth_scheme and the jwt token
 async def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
-        revoked = redis_client.get(token)
-        # VERIFY IF THE TOKEN IS REVOKED
-        if revoked is not None:
-            raise ValueError(
-                {
-                    "status": 498,
-                    "detail": str(f"Sesion expirada, inicie sesion nuevamente.")
-                }
-            )
+        try:
+            revoked = redis_client.get(token)
+            if revoked is not None:
+                raise ValueError({"status": 498, "detail": "Sesion expirada, inicie sesion nuevamente."})
+        except redis.exceptions.ConnectionError:
+            pass  # Redis unavailable — skip revocation check, rely on JWT expiration
 
         payload = jwt.decode(token, settings.jwt_secret, algorithms=[settings.algorithm])
 
         user = await Usuario.get(id=payload.get('id'))
 
-        valid_token = redis_client.hget("valid_tokens", f"{payload.get('id')}").decode('utf-8')
-        # CHECK IF IT ISN'T THE CURRENT TOKEN
-        if valid_token  is None or valid_token != token:
-            raise ValueError(
-                {
-                    "status": 498,
-                    "detail": str(f"Sesion expirada, inicie sesion nuevamente.")
-                }
-            )
+        try:
+            raw = redis_client.hget("valid_tokens", f"{payload.get('id')}")
+            valid_token = raw.decode('utf-8') if raw else None
+            if valid_token is not None and valid_token != token:
+                raise ValueError({"status": 498, "detail": "Sesion expirada, inicie sesion nuevamente."})
+        except redis.exceptions.ConnectionError:
+            pass  # Redis unavailable — skip single-session check, rely on JWT signature
+
         del user.password_hash
         return user
 
     except ValueError as e:
         e = e.args[0]
-        
-        raise HTTPException(
-            status_code=e["status"],
-            detail=e["detail"]
-        )
+        raise HTTPException(status_code=e["status"], detail=e["detail"])
     except Exception as e:
         print(e)
-        # use HTTPException to rise an error based in class status from fastapi,
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail='Could not validate credentials: ' + str(e),

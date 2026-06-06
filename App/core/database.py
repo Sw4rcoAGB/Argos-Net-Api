@@ -31,6 +31,9 @@ async def init():
                      "App.models.cosecha",
                      "App.models.boveda",
                      "App.models.inversion",
+                     "App.models.etherfuse_cliente",
+                     "App.models.etherfuse_orden",
+                     "App.models.nft_listing",
                 ]
         }
     )

@@ -72,6 +72,8 @@ async def registrar_cosecha(
         nft_token_id=token_id,
         tx_hash_mint=tx_hash,
         estado="MINTED",
+        latitud=data.latitud,
+        longitud=data.longitud,
     )
     await cosecha.save()
     logger.info(f"{logger_message} [SUCCESS] Cosecha {cosecha.id} creada, NFT #{token_id}, tx: {tx_hash}")
